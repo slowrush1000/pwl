@@ -1,6 +1,6 @@
 # pwl
 
-1. build/build_setup.csh
+## build/build_setup.csh
 ```
 #!/bin/tcsh -f
 
@@ -19,7 +19,7 @@ cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER} -DCMAKE_
 cd .. 
 ```
 
-2. pwl::PWL::readFile(const std::string& fileName), writeFile(const std::string& fileName) file format
+## pwl::PWL::readFile(const std::string& fileName), writeFile(const std::string& fileName) file format
 
 > index1 time1 value1
 
@@ -31,20 +31,19 @@ cd ..
 
 > indexN timeN valueN
 
-3. pwl test reference file
+## pwl test reference file
 
-/media/PROJECT02/circuit/signalEM/00_test/i1vin.txt
-/media/PROJECT02/circuit/signalEM/00_test/vout.txt
-/media/PROJECT02/circuit/signalEM/00_test/ref.log
-Measurements for Transient Analysis
-
-i1vin_avg           =  -2.678997e-11 from=  5.050000e-08 to=  5.150050e-08
-i1vin_min           =  -5.982921e-02 at=  5.109950e-08
-i1vin_max           =   5.965893e-02 at=  5.119950e-08
-i1vin_pp            =   1.194881e-01 from=  5.050000e-08 to=  5.150000e-08
-i1vin_rms           =   2.31769e-02  from=  5.05000e-08 to=  5.15000e-08
-vout_avg            =  1.001001e-01 from=  5.050000e-08 to=  5.150050e-08
-vout_min            =  2.431209e-248 at=  5.099950e-08
-vout_max            =  8.801812e-01 at=  5.111350e-08
-vout_pp             =  8.801812e-01 from=  5.050000e-08 to=  5.150000e-08
-vout_rms            =   2.49450e-01 from=  5.05000e-08 to=  5.15000e-08
+1. reference file path(pwl file)
+    - data/i1vin.txt
+    - data/vout.txt
+2. reference result
+    - i1vin_avg           =  -2.678997e-11 from=  5.050000e-08 to=  5.150050e-08
+    - i1vin_min           =  -5.982921e-02 at=  5.109950e-08
+    - i1vin_max           =   5.965893e-02 at=  5.119950e-08
+    - i1vin_pp            =   1.194881e-01 from=  5.050000e-08 to=  5.150000e-08
+    - i1vin_rms           =   2.31769e-02  from=  5.05000e-08 to=  5.15000e-08
+    - vout_avg            =  1.001001e-01 from=  5.050000e-08 to=  5.150050e-08
+    - vout_min            =  2.431209e-248 at=  5.099950e-08
+    - vout_max            =  8.801812e-01 at=  5.111350e-08
+    - vout_pp             =  8.801812e-01 from=  5.050000e-08 to=  5.150000e-08
+    - vout_rms            =   2.49450e-01 from=  5.05000e-08 to=  5.15000e-08

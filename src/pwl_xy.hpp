@@ -22,10 +22,10 @@ namespace pwl
 #define DATATYPE_DOUBLE
 #if defined(DATATYPE_DOUBLE)
     using   xy_tt                   = double;
-    constexpr xy_tt     kXYttNaN    = std::nan("");
+    const   xy_tt     kXYttNaN      = std::nan("");
 #else
     using   xy_tt                   = float;
-    constexpr xy_tt     kXYttNaN    = xy_tt(std::nan(""));
+    const   xy_tt     kXYttNaN      = xy_tt(std::nan(""));
 #endif
 
     constexpr xy_tt     kXYttInit   = 0.0;
