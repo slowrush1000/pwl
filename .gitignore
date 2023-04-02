@@ -4,3 +4,4 @@ doc/html/
 doc/latex/
 src/tags
 src/*.sw*
+src/pwl_git.hpp
