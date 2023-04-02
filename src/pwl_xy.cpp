@@ -15,6 +15,16 @@ pwl::XY::XY(const pwl::xy_tt x, const pwl::xy_tt y) : mX(x), mY(y)
 {
 }
 
+pwl::XY::XY(std::initializer_list<pwl::xy_tt> list)
+{
+    if (2 == list.size())
+    {
+        auto iter   = list.begin();
+        mX          = *iter++;
+        mY          = *iter;
+    }
+}
+
 pwl::XY::XY(const pwl::XY& other) : mX(other.mX), mY(other.mY)
 {
 }

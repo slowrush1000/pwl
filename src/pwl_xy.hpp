@@ -13,6 +13,7 @@
 #define PWL_XY_H
 
 #include <limits>
+#include <initializer_list>
 #include <cmath>
 
 namespace pwl
@@ -36,6 +37,7 @@ namespace pwl
         public:
             XY() = default;
             XY(const xy_tt x, const xy_tt y);
+            XY(std::initializer_list<xy_tt> l);
             XY(const XY& other);
             ~XY();
 

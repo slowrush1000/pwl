@@ -15,6 +15,8 @@
 #include "pwl_xy.hpp"
 #include <vector>
 #include <array>
+#include <initializer_list>
+#include <string>
 
 namespace pwl
 {
@@ -22,6 +24,7 @@ namespace pwl
     {
         public:
             PWL() = default;
+            PWL(std::initializer_list<XY> list);
             PWL(const PWL& other);
             virtual ~PWL();
 
@@ -39,25 +42,10 @@ namespace pwl
             xy_tt                   getArea(const xy_tt x1, const xy_tt x2, const xy_tt x11, const xy_tt y11, const xy_tt x12, const xy_tt y12);
             xy_tt                   getAreaPow2(const xy_tt x1, const xy_tt x2, const xy_tt x11, const xy_tt y11, const xy_tt x12, const xy_tt y12);
 
-            /*
-            xy_tt                   getY(const xy_tt x);
-            void                    xshift(const xy_tt xshift);
-            void                    yscale(const xy_tt yscale);
-            xy_tt                   getYInLine(const xy_tt x, const xy_tt x1, const xy_tt y1, const xy_tt x2, const xy_tt y2);
-            xy_tt                   getAvg(const xy_tt x1, const xy_tt x2);
-            std::size_t             getLowerBoundPos(const xy_tt x);
-            std::size_t             getUpperBoundPos(const xy_tt x);
-            xy_tt                   getAreaPow2InLine(const xy_tt x1, const xy_tt y1, const xy_tt x2, const xy_tt y2);
-            xy_tt                   getMaxInLine(const xy_tt x1, const xy_tt y1, const xy_tt x2, const xy_tt y2);
-            xy_tt                   getMinInLine(const xy_tt x1, const xy_tt y1, const xy_tt x2, const xy_tt y2);
-            xy_tt                   getPeakInLine(const xy_tt x1, const xy_tt y1, const xy_tt x2, const xy_tt y2);
-            bool                    isPoint(const xy_tt x1, const xy_tt y1, const xy_tt x2, const xy_tt y2);
-            bool                    isVerticalLine(const xy_tt x1, const xy_tt y1, const xy_tt x2, const xy_tt y2);
-            bool                    isHorizontalLine(const xy_tt x1, const xy_tt y1, const xy_tt x2, const xy_tt y2);
-            bool                    isInLine(const xy_tt x, const xy_tt x1, const xy_tt x2);
-
             PWL&                    operator=(const PWL& other);
-            */
+
+            void                    readFile(const std::string& fileName);
+            void                    writeFile(const std::string& fileName);
 
         private:
             std::vector<XY>     mXYs;

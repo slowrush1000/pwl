@@ -12,10 +12,17 @@
 #include "pwl_pwl.hpp"
 #include "pwl_util.hpp"
 #include <algorithm>
+#include <fstream>
+#include <gzstream.h>
+#include <fmt/printf.h>
 
 pwl::PWL::PWL(const pwl::PWL& other)
 {
     std::copy(other.mXYs.begin(), other.mXYs.end(), std::back_inserter(mXYs));
+}
+
+pwl::PWL::PWL(std::initializer_list<pwl::XY> list) : mXYs(list)
+{
 }
 
 pwl::PWL::~PWL()
@@ -230,28 +237,7 @@ pwl::PWL::getMin(const pwl::xy_tt x1, const pwl::xy_tt x2)
 pwl::xy_tt
 pwl::PWL::getMaxPeakToPeak(const pwl::xy_tt x1, const pwl::xy_tt x2)
 {
-    auto    maxPeakToPeak   = pwl::kXYttMin;
-
-    for (auto pos = 0; pos < (mXYs.size() - 1); ++pos)
-    {
-        auto    x11  = mXYs[pos].getX();
-        auto    y11  = mXYs[pos].getY();
-        auto    x12  = mXYs[pos + 1].getX();
-        auto    y12  = mXYs[pos + 1].getY();
-
-        bool    isOverlap   = false;
-        auto    xy22        = this->getOverlapPeriod(x1, x2, x11, x12, isOverlap);
-
-        if (true == isOverlap)
-        {
-            auto    xy22y1      = this->getY(xy22.first);
-            auto    xy22y2      = this->getY(xy22.second);
-
-            auto    peakToPeak  = std::max<pwl::xy_tt>(xy22y1, xy22y2) - std::min<pwl::xy_tt>(xy22y1, xy22y2);
-
-            maxPeakToPeak       = std::max<pwl::xy_tt>(maxPeakToPeak, peakToPeak);
-        }
-    }
+    auto    maxPeakToPeak   = this->getMax(x1, x2) - this->getMin(x1, x2);
 
     return maxPeakToPeak;
 }
@@ -274,203 +260,6 @@ pwl::PWL::getAreaPow2(const pwl::xy_tt x1, const pwl::xy_tt x2, const pwl::xy_tt
     return  a * a * (x2 * x2 * x2 - x1 * x1 * x1) / 3.0 + a * b * (x2 * x2 - x1 * x1) + b * b * (x2 - x1);
 }
 
-/*
-std::array<pwl::xy_tt, 5>
-pwl::PWL::getAvgRMSMaxMinPeak(const pwl::xy_tt x1, const pwl::xy_tt x2)
-{
-    std::array<pwl::xy_tt, 5>   avgRMSMaxMinPeak;
-
-    return avgRMSMaxMinPeak;
-}
-
-// satify element < value
-std::size_t
-pwl::PWL::getLowerBoundPos(const pwl::xy_tt x)
-{
-    auto    lowerBound  = std::lower_bound(mXYs.begin(), mXYs.end(), pwl::XY(x, 0.0));
-
-    if (mXYs.end() == lowerBound)
-    {
-        return mXYs.size();
-    }
-    else
-    {
-        return std::distance(mXYs.begin(), lowerBound);
-    }
-}
-
-// satify element > value
-std::size_t
-pwl::PWL::getUpperBoundPos(const pwl::xy_tt x)
-{
-    auto    upperBound  = std::upper_bound(mXYs.begin(), mXYs.end(), pwl::XY(x, 0.0));
-
-    if (mXYs.end() == upperBound)
-    {
-        return mXYs.size();
-    }
-    else
-    {
-        return std::distance(mXYs.begin(), upperBound);
-    }
-}
-
-void
-pwl::PWL::xshift(const pwl::xy_tt xshift)
-{
-    std::for_each(mXYs.begin(), mXYs.end(), [xshift](pwl::XY & xy)
-    {
-        xy.setX(xy.getX() - xshift);
-    }
-                 );
-}
-
-void
-pwl::PWL::yscale(const pwl::xy_tt yscale)
-{
-    std::for_each(mXYs.begin(), mXYs.end(), [yscale](pwl::XY & xy)
-    {
-        xy.setY(xy.getX()*yscale);
-    }
-                 );
-}
-
-pwl::xy_tt
-pwl::PWL::getYInLine(const pwl::xy_tt x, const pwl::xy_tt x1, const pwl::xy_tt y1, const pwl::xy_tt x2, const pwl::xy_tt y2)
-{
-    if (true == pwl::isEqual(x, x1))
-    {
-        return y1;
-    }
-
-    if (true == pwl::isEqual(x, x2))
-    {
-        return y2;
-    }
-
-    return (y2 - y1) * (x - x1) / (x2 - x1) + y1;
-}
-
-pwl::xy_tt
-pwl::PWL::getAvg(const pwl::xy_tt x1, const pwl::xy_tt x2)
-{
-    auto    x1Pos   = this->getLowerBoundPos(x1);
-    auto    x2Pos   = this->getUpperBoundPos(x2);
-
-    for (auto pos = x1Pos; pos <= x2Pos; ++pos)
-    {
-        if (x1Pos == pos)
-        {
-        }
-        else if (x2Pos == pos)
-        {
-
-        }
-        else
-        {
-
-        }
-    }
-}
-
-
-pwl::xy_tt
-pwl::PWL::getAreaInLine(const pwl::xy_tt x1, const pwl::xy_tt y1, const pwl::xy_tt x2, const pwl::xy_tt y2)
-{
-    // |
-    // vertical line은 없다고 가정한다.
-
-    // -
-    if (y1 == y2)
-    {
-        return y1;
-    }
-
-    //
-    return 0.5 * (x2 - x1) * (y1 + y2);
-}
-
-pwl::xy_tt
-pwl::PWL::getAreaPow2InLine(const pwl::xy_tt x1, const pwl::xy_tt y1, const pwl::xy_tt x2, const pwl::xy_tt y2)
-{
-    // |
-    // vertical line은 없다고 가정한다.
-
-    // -
-    if (y1 == y2)
-    {
-        return std::fabs(y1);
-    }
-
-    //
-    xy_tt   a   = (y2 - y1) / (x2 - x1);
-    xy_tt   b   = y1 - a * x1;
-
-    return std::pow(a, 3.0) * (std::pow(x2, 3.0) - std::pow(x1, 3.0)) / 3.0 + a * b * (x2 * x2 - x1 * x1) + b * b * (x2 - x1);
-}
-
-pwl::xy_tt
-pwl::PWL::getMaxInLine(const pwl::xy_tt x1, const pwl::xy_tt y1, const pwl::xy_tt x2, const pwl::xy_tt y2)
-{
-    return std::max<pwl::xy_tt>(y1, y2);
-}
-
-pwl::xy_tt
-pwl::PWL::getMinInLine(const pwl::xy_tt x1, const pwl::xy_tt y1, const pwl::xy_tt x2, const pwl::xy_tt y2)
-{
-    return std::min<pwl::xy_tt>(y1, y2);
-}
-
-pwl::xy_tt
-pwl::PWL::getPeakInLine(const pwl::xy_tt x1, const pwl::xy_tt y1, const pwl::xy_tt x2, const pwl::xy_tt y2)
-{
-    return std::max<pwl::xy_tt>(y1, y2) - std::min<pwl::xy_tt>(y1, y2);
-}
-
-bool
-pwl::PWL::isPoint(const pwl::xy_tt x1, const pwl::xy_tt y1, const pwl::xy_tt x2, const pwl::xy_tt y2)
-{
-    if ((true == pwl::isEqual(x1, x2)) && (true == pwl::isEqual(y1, y2)))
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-bool
-pwl::PWL::isVerticalLine(const pwl::xy_tt x1, const pwl::xy_tt y1, const pwl::xy_tt x2, const pwl::xy_tt y2)
-{
-    if (true == pwl::isEqual(x1, x2))
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-bool
-pwl::PWL::isHorizontalLine(const pwl::xy_tt x1, const pwl::xy_tt y1, const pwl::xy_tt x2, const pwl::xy_tt y2)
-{
-    if (true == pwl::isEqual(y1, y2))
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-bool
-pwl::PWL::isInLine(const pwl::xy_tt x, const pwl::xy_tt x1, const pwl::xy_tt x2)
-{
-}
-
 pwl::PWL&
 pwl::PWL::operator=(const pwl::PWL& other)
 {
@@ -483,4 +272,58 @@ pwl::PWL::operator=(const pwl::PWL& other)
 
     return *this;
 }
-*/
+
+// file format : index time value
+void
+pwl::PWL::readFile(const std::string& fileName)
+{
+    igzstream   file;
+    file.open(fileName.c_str());
+
+    if (false == file.good())
+    {
+        std::cout << "# error : file open failed.\n";
+        return;
+    }
+
+    std::vector<std::string>    tokens;
+    std::string                 delims(" \t\r\n");
+    std::string                 line;
+    std::size_t                 nLines  = 0;
+
+    while (std::getline(file, line))
+    {
+        pwl::tokenize(line, tokens, delims);
+
+        if (true == tokens.empty())
+        {
+            continue;
+        }
+
+        auto    x               = pwl::atof2(tokens[1]);
+        auto    y               = pwl::atof2(tokens[2]);
+
+        this->addXY(pwl::XY(x, y));
+    }
+
+    file.close();
+}
+
+void
+pwl::PWL::writeFile(const std::string& fileName)
+{
+    std::ofstream   file(fileName);
+
+    if (false == file.is_open())
+    {
+        std::cout << "# error : file open failed.\n";
+        return;
+    }
+
+    for (auto index = 0; index < mXYs.size(); ++index)
+    {
+        file << fmt::sprintf("%lld %e %e\n", index, mXYs[index].getX(), mXYs[index].getY());
+    }
+
+    file.close();
+}

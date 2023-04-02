@@ -101,19 +101,22 @@ target_link_libraries(${MY_EXE_NAME}        ${SPDLOG_LIBRARIES})
 ##    target_link_libraries(${MY_EXE_NAME} spdlog)
 ##endif(spdlog_FOUND)
 
-## gzstream
-#find_package(GZSTREAM)
-#if (GZSTREAM_FOUND)
-#    include_directories(${GZSTREAM_INCLUDE_DIRS})
-#    target_link_libraries(${MY_EXE_NAME} ${GZSTREAM_LIBRARIES})
-#endif(GZSTREAM_FOUND)
+# gzstream
+find_package(GZSTREAM)
+if (GZSTREAM_FOUND)
+    include_directories(${GZSTREAM_INCLUDE_DIRS})
+    target_link_libraries(${MY_EXE_NAME} ${GZSTREAM_LIBRARIES})
+    target_link_libraries(${MY_TEST_EXE_NAME} ${GZSTREAM_LIBRARIES})
+    target_link_libraries(${MY_EXE_NAME} z)
+    target_link_libraries(${MY_TEST_EXE_NAME} z)
+endif(GZSTREAM_FOUND)
 
-## fmt
-#find_package(fmt)
-#if(fmt_FOUND)
-#    #    include_directories(${fmt_INCLUDE_DIRS})
-#    target_link_libraries(${MY_EXE_NAME} fmt::fmt)
-#endif(fmt_FOUND)
+# fmt
+find_package(fmt)
+if(fmt_FOUND)
+    #    include_directories(${fmt_INCLUDE_DIRS})
+    target_link_libraries(${MY_EXE_NAME} fmt::fmt)
+endif(fmt_FOUND)
 
 ## tcl/tk
 #find_package(TCL)
