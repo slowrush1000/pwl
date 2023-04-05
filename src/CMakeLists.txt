@@ -10,7 +10,6 @@ set(INST_DIR                                "${CMAKE_SOURCE_DIR}/install")
 set(EXTERN_DIR                              "/media/PROJECT02/extern")
 #set(EXTERN_DIR                              "../../../extern")
 
-
 # git version
 execute_process(
     COMMAND git rev-parse --abbrev-ref HEAD
@@ -94,6 +93,7 @@ set(SPDLOG_INC_DIR                          "${SPDLOG_DIR}/include")
 set(SPDLOG_LIBRARIES                        "${SPDLOG_DIR}/build/libspdlog.a")
 include_directories(${SPDLOG_INC_DIR})
 target_link_libraries(${MY_EXE_NAME}        ${SPDLOG_LIBRARIES})
+target_link_libraries(${MY_TEST_EXE_NAME}   ${SPDLOG_LIBRARIES})
 ##include_directories("../{SPDLOG_DIR}/include")
 ##target_link_libraries(${MY_EXE_NAME}        spdlog)
 ##find_package(spdlog)
@@ -116,6 +116,7 @@ find_package(fmt)
 if(fmt_FOUND)
     #    include_directories(${fmt_INCLUDE_DIRS})
     target_link_libraries(${MY_EXE_NAME} fmt::fmt)
+    target_link_libraries(${MY_TEST_EXE_NAME} fmt::fmt)
 endif(fmt_FOUND)
 
 ## tcl/tk

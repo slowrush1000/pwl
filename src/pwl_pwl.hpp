@@ -39,16 +39,24 @@ namespace pwl
             xy_tt                   getMin(const xy_tt x1, const xy_tt x2);
             xy_tt                   getMaxPeakToPeak(const xy_tt x1, const xy_tt x2);
 
+            void                    xshift(const xy_tt xshift);
+            void                    yscale(const xy_tt yscale);
+            void                    add(PWL& other);
+
+            std::vector<xy_tt>      getXs();
+            std::vector<xy_tt>      getYs();
+            std::vector<xy_tt>      mergeXs(const std::vector<xy_tt>& xs1, const std::vector<xy_tt>& xs2);
+
             xy_tt                   getArea(const xy_tt x1, const xy_tt x2, const xy_tt x11, const xy_tt y11, const xy_tt x12, const xy_tt y12);
             xy_tt                   getAreaPow2(const xy_tt x1, const xy_tt x2, const xy_tt x11, const xy_tt y11, const xy_tt x12, const xy_tt y12);
 
             PWL&                    operator=(const PWL& other);
 
-            void                    readFile(const std::string& fileName);
+            void                    readFile(const std::string& fileName, const std::size_t xPos, const std::size_t yPos);
             void                    writeFile(const std::string& fileName);
 
         private:
-            std::vector<XY>     mXYs;
+            std::vector<XY>        mXYs;
     };
 }
 

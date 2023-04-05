@@ -129,7 +129,7 @@ pwl::PWL::getY(const pwl::xy_tt x)
         }
     }
 
-    return kXYttNaN;
+    return pwl::kXYttInit;
 }
 
 pwl::xy_tt
@@ -260,6 +260,100 @@ pwl::PWL::getAreaPow2(const pwl::xy_tt x1, const pwl::xy_tt x2, const pwl::xy_tt
     return  a * a * (x2 * x2 * x2 - x1 * x1 * x1) / 3.0 + a * b * (x2 * x2 - x1 * x1) + b * b * (x2 - x1);
 }
 
+void
+pwl::PWL::xshift(const pwl::xy_tt xshift)
+{
+    for (auto pos = 0; pos < mXYs.size(); ++pos)
+    {
+        auto    x   = mXYs[pos].getX();
+        mXYs[pos].setX(x + xshift);
+    }
+}
+
+void
+pwl::PWL::yscale(const pwl::xy_tt yscale)
+{
+    for (auto pos = 0; pos < mXYs.size(); ++pos)
+    {
+        auto    y   = mXYs[pos].getY();
+
+        mXYs[pos].setY(y * yscale);
+    }
+}
+
+void
+pwl::PWL::add(pwl::PWL& other)
+{
+    auto    xs1     = this->getXs();
+    auto    xs2     = other.getXs();
+
+    auto    xs      = this->mergeXs(xs1, xs2);
+    auto    ys      = std::vector<pwl::xy_tt>(xs.size());
+
+    for (auto pos = 0; pos < xs.size(); ++pos)
+    {
+        auto    y1  = this->getY(xs[pos]);
+        auto    y2  = other.getY(xs[pos]);
+
+        ys[pos]     = y1 + y2;
+    }
+
+    mXYs.resize(xs.size());
+
+    for (auto pos = 0; pos < xs.size(); ++pos)
+    {
+        mXYs[pos]   = pwl::XY(xs[pos], ys[pos]);
+    }
+}
+
+std::vector<pwl::xy_tt>
+pwl::PWL::getXs()
+{
+    std::vector<pwl::xy_tt>     xs;
+
+    for (auto pos = 0; pos < mXYs.size(); ++pos)
+    {
+        xs.emplace_back(mXYs[pos].getX());
+    }
+
+    return xs;
+}
+
+std::vector<pwl::xy_tt>
+pwl::PWL::getYs()
+{
+    std::vector<pwl::xy_tt>     ys;
+
+    for (auto pos = 0; pos < mXYs.size(); ++pos)
+    {
+        ys.emplace_back(mXYs[pos].getY());
+    }
+
+    return ys;
+}
+
+std::vector<pwl::xy_tt>
+pwl::PWL::mergeXs(const std::vector<pwl::xy_tt>& xs1, const std::vector<pwl::xy_tt>& xs2)
+{
+    std::vector<pwl::xy_tt>     xs;
+
+    for (auto pos = 0; pos < xs1.size(); ++pos)
+    {
+        xs.emplace_back(xs1[pos]);
+    }
+
+    for (auto pos = 0; pos < xs2.size(); ++pos)
+    {
+        xs.emplace_back(xs2[pos]);
+    }
+
+    std::sort(xs.begin(), xs.end());
+    auto last   = std::unique(xs.begin(), xs.end());
+    xs.erase(last, xs.end());
+
+    return xs;
+}
+
 pwl::PWL&
 pwl::PWL::operator=(const pwl::PWL& other)
 {
@@ -275,7 +369,7 @@ pwl::PWL::operator=(const pwl::PWL& other)
 
 // file format : index time value
 void
-pwl::PWL::readFile(const std::string& fileName)
+pwl::PWL::readFile(const std::string& fileName, const std::size_t xPos, const std::size_t yPos)
 {
     igzstream   file;
     file.open(fileName.c_str());
@@ -300,8 +394,8 @@ pwl::PWL::readFile(const std::string& fileName)
             continue;
         }
 
-        auto    x               = pwl::atof2(tokens[1]);
-        auto    y               = pwl::atof2(tokens[2]);
+        auto    x               = pwl::atof2(tokens[xPos]);
+        auto    y               = pwl::atof2(tokens[yPos]);
 
         this->addXY(pwl::XY(x, y));
     }

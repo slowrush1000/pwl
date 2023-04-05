@@ -51,7 +51,7 @@ TEST(PWL_TEST, trangleLine)
 TEST(PWL_TEST, i1vin1)
 {
     pwl::PWL            myPWL;
-    myPWL.readFile(std::string("../../data/i1vin.txt"));
+    myPWL.readFile(std::string("../../data/i1vin.txt"), 1, 2);
     myPWL.writeFile(std::string("i1vin.write.txt"));
 
     /*
@@ -71,7 +71,7 @@ TEST(PWL_TEST, i1vin1)
 TEST(PWL_TEST, vout1)
 {
     pwl::PWL            myPWL;
-    myPWL.readFile(std::string("../../data/vout.txt"));
+    myPWL.readFile(std::string("../../data/vout.txt"), 1, 2);
     myPWL.writeFile(std::string("vout.write.txt"));
 
     /*
