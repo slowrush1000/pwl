@@ -1,12 +1,34 @@
-BasedOnStyle: LLVM
-IndentWidth: 4
-BreakBeforeBraces: Allman
-IndentCaseLabels: true
+# common
+BasedOnStyle: Microsoft
+ColumnLimit: 120
 UseTab: Never
-Standard: c++20
-SeparateDefinitionBlocks: Always
+Standard: Latest
+
+# alignment
+PointerAlignment: Left
+QualifierAlignment: Left
+
+# indent
 NamespaceIndentation: All
-LambdaBodyIndentation: Signature
+IndentWidth: 4
+IndentAccessModifiers: true
 IndentCaseLabels: true
+
+# break
+AlwaysBreakAfterDefinitionReturnType: All
+BreakBeforeBraces: Allman
+BreakConstructorInitializers: BeforeComma
+BreakInheritanceList: AfterComma
+AlwaysBreakTemplateDeclarations: Yes
+
+# arguements
+BinPackArguments: false
+BinPackParameters: false
+
+# assign
+AlignConsecutiveAssignments: AcrossEmptyLinesAndComments
+SpaceBeforeCpp11BracedList: true
 Cpp11BracedListStyle: true
-AlignAfterOpenBracket: Align
+AlignArrayOfStructures: Right
+InsertTrailingCommas: Wrapped
+#PackConstructorInitializersStyle: NextLineOnly

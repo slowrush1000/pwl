@@ -14,11 +14,12 @@
 #include <iostream>
 #include <string>
 
-pwl::Version kVersion(std::string("pwl.exe"), 20230402, 0, 0);
+pwl::Version k_version(std::string("pwl.exe"), 20230402, 0, 0);
 
-int main()
+int
+main()
 {
-    std::cout << kVersion.getStr() << "\n";
+    std::cout << k_version.str() << "\n";
 
     return 0;
 }

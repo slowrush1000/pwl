@@ -3,7 +3,7 @@
  * @author Cheon Younghoe (you@domain.com)
  * @brief
  * @version 0.1
- * @date 2023-04-02
+ * @date 2023-04-17
  *
  * @copyright Copyright (c) 2023
  *
@@ -16,90 +16,101 @@ pwl::Log::Log()
 {
     try
     {
-        mConsoleSink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-        mConsoleSink->set_pattern(mLogPattern);
-        mConsoleSink->set_level(mLogLevel);
+        m_console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+        m_console_sink->set_pattern(m_log_pattern);
+        m_console_sink->set_level(m_log_level);
 
-        mFileSink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(
-            mLogFileName, true);
-        mFileSink->set_pattern(mLogPattern);
-        mFileSink->set_level(mLogLevel);
+        m_file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(m_log_filename, true);
+        m_file_sink->set_pattern(m_log_pattern);
+        m_file_sink->set_level(m_log_level);
 
-        spdlog::sinks_init_list sinks = {mConsoleSink, mFileSink};
+        spdlog::sinks_init_list sinks = {m_console_sink, m_file_sink};
 
-        mLogger = std::make_shared<spdlog::logger>(mLoggerName, sinks);
-        mLogger->set_pattern(mLogPattern);
-        mLogger->set_level(mLogLevel);
+        m_logger                      = std::make_shared<spdlog::logger>(m_logger_name, sinks);
+        m_logger->set_pattern(m_log_pattern);
+        m_logger->set_level(m_log_level);
 
-        spdlog::set_default_logger(mLogger);
+        spdlog::set_default_logger(m_logger);
     }
-    catch (const spdlog::spdlog_ex &ex)
+    catch (const spdlog::spdlog_ex& ex)
     {
         std::cout << "# error: log init. failed. : " << ex.what() << "\n";
         exit(0);
     }
 }
 
-pwl::Log::Log(const std::string &loggerName, const std::string &logFileName)
-    : mLoggerName(loggerName), mLogFileName(logFileName)
+pwl::Log::Log(const std::string& _logger_name, const std::string& log_filename)
+    : m_logger_name(_logger_name)
+    , m_log_filename(log_filename)
 {
     try
     {
-        mConsoleSink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-        mConsoleSink->set_pattern(mLogPattern);
-        mConsoleSink->set_level(mLogLevel);
+        m_console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+        m_console_sink->set_pattern(m_log_pattern);
+        m_console_sink->set_level(m_log_level);
 
-        mFileSink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(
-            mLogFileName, true);
-        mFileSink->set_pattern(mLogPattern);
-        mFileSink->set_level(mLogLevel);
+        m_file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(m_log_filename, true);
+        m_file_sink->set_pattern(m_log_pattern);
+        m_file_sink->set_level(m_log_level);
 
-        spdlog::sinks_init_list sink_lists = {mConsoleSink, mFileSink};
+        spdlog::sinks_init_list sink_lists = {m_console_sink, m_file_sink};
 
-        mLogger = std::make_shared<spdlog::logger>(mLoggerName, sink_lists);
-        mLogger->set_pattern(mLogPattern);
-        mLogger->set_level(mLogLevel);
+        m_logger                           = std::make_shared<spdlog::logger>(m_logger_name, sink_lists);
+        m_logger->set_pattern(m_log_pattern);
+        m_logger->set_level(m_log_level);
 
-        spdlog::set_default_logger(mLogger);
+        spdlog::set_default_logger(m_logger);
     }
-    catch (const spdlog::spdlog_ex &ex)
+    catch (const spdlog::spdlog_ex& ex)
     {
         std::cout << "# error: log init. failed. : " << ex.what() << "\n";
         exit(0);
     }
 }
 
-pwl::Log::~Log() {}
+pwl::Log::~Log()
+{
+}
 
 std::shared_ptr<spdlog::logger>
-pwl::Log::getDefaultLogger(const std::string &defaultLoggerName)
+pwl::Log::default_logger(const std::string& default_logger_name)
 {
-    return spdlog::get(defaultLoggerName);
+    return spdlog::get(default_logger_name);
 }
 
-void pwl::Log::setLoggerName(const std::string &loggerName)
+void
+pwl::Log::set_logger_name(const std::string& logger_name)
 {
-    mLoggerName = loggerName;
+    m_logger_name = logger_name;
 }
 
-const std::string &pwl::Log::getLoggerName() const { return mLoggerName; }
-
-void pwl::Log::setLogFileName(const std::string &logFileName)
+const std::string&
+pwl::Log::logger_name() const
 {
-    mLogFileName = logFileName;
+    return m_logger_name;
 }
 
-const std::string &pwl::Log::getLogFileName() const { return mLogFileName; }
-
-void pwl::Log::changeLogLevel(const spdlog::level::level_enum logLevel)
+void
+pwl::Log::set_log_filename(const std::string& log_filename)
 {
-    if ((nullptr != mLogger) && (nullptr != mFileSink) &&
-        (nullptr != mConsoleSink))
+    m_log_filename = log_filename;
+}
+
+const std::string&
+pwl::Log::log_filename() const
+{
+    return m_log_filename;
+}
+
+void
+pwl::Log::change_log_level(const spdlog::level::level_enum log_level)
+{
+    if ((nullptr != m_logger) && (nullptr != m_file_sink) && (nullptr != m_console_sink))
     {
-        mLogLevel = logLevel;
+        m_log_level = log_level;
 
-        mConsoleSink->set_level(logLevel);
-        mFileSink->set_level(logLevel);
-        mLogger->set_level(logLevel);
+        m_console_sink->set_level(log_level);
+        m_file_sink->set_level(log_level);
+        m_logger->set_level(log_level);
     }
 }

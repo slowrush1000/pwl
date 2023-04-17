@@ -15,11 +15,13 @@
 #include <iostream>
 #include <string>
 
-pwl::Version kVersion(std::string("pwl.test.exe"), 20230402, 0, 0);
+pwl::Version k_version(std::string("pwl.test.exe"), 20230402, 0, 0);
 
-int main(int argc, char *argv[]) {
-  std::cout << kVersion.getStr() << "\n";
+int
+main(int argc, char* argv[])
+{
+    std::cout << k_version.str() << "\n";
 
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }

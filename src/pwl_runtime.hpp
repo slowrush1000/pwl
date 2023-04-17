@@ -3,7 +3,7 @@
  * @author Cheon Younghoe (you@domain.com)
  * @brief
  * @version 0.1
- * @date 2023-04-02
+ * @date 2023-04-17
  *
  * @copyright Copyright (c) 2023
  *
@@ -15,26 +15,28 @@
 #include <chrono>
 #include <memory>
 
-namespace pwl {
-class Runtime {
-public:
-  Runtime();
-  virtual ~Runtime();
+namespace pwl
+{
+    class Runtime;
+    using pRuntime = std::shared_ptr<Runtime>;
 
-  double getCPUTimeSecs();
-  double getWallTimeSecs();
+    class Runtime
+    {
+        public:
+            Runtime();
+            virtual ~Runtime();
 
-  std::size_t getPeakRSSBytes();
-  std::size_t getCurrentRSSBytes();
+            double cpu_time_secs();
+            double wall_time_secs();
 
-  std::string getRuntimeStr();
+            std::size_t peak_rss_bytes();
+            std::size_t current_rss_bytes();
 
-private:
-  std::clock_t mCPUTime;
-  std::chrono::time_point<std::chrono::high_resolution_clock> mWallTime;
-};
+            std::string str();
 
-using pRuntime = std::shared_ptr<Runtime>;
+        private:
+            std::clock_t m_cpu_time;
+            std::chrono::time_point<std::chrono::high_resolution_clock> m_wall_time;
+    };
 } // namespace pwl
-
 #endif // PWL_RUNTIME_H

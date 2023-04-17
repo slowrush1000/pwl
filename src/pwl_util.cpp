@@ -3,7 +3,7 @@
  * @author Cheon Younghoe (you@domain.com)
  * @brief
  * @version 0.1
- * @date 2023-04-02
+ * @date 2023-04-17
  *
  * @copyright Copyright (c) 2023
  *
@@ -19,47 +19,56 @@
 #include <sys/utsname.h>
 #include <unistd.h>
 
-std::string pwl::getCurrentTime()
+std::string
+pwl::get_current_time()
 {
-    auto today = std::chrono::system_clock::now();
-    auto tt = std::chrono::system_clock::to_time_t(today);
-    auto ctimeStr = std::string(std::ctime(&tt));
+    auto today     = std::chrono::system_clock::now();
+    auto tt        = std::chrono::system_clock::to_time_t(today);
+    auto ctime_str = std::string(std::ctime(&tt));
 
-    pwl::changeStr(ctimeStr, std::string("\n"), std::string(""));
+    pwl::change_str(ctime_str, std::string("\n"), std::string(""));
 
-    return ctimeStr;
+    return ctime_str;
 }
 
-std::string pwl::getCurrentDir()
+std::string
+pwl::get_current_dir()
 {
     auto currentPath = pwl::fs_tt::current_path();
 
     return currentPath.native();
 }
 
-std::string pwl::getUser()
+std::string
+pwl::get_user()
 {
-    char user[pwl::kBufferSize1k];
+    char user[pwl::k_buffer_size_1k];
 
-    if (0 == getlogin_r(user, pwl::kBufferSize1k))
+    if (0 == getlogin_r(user, pwl::k_buffer_size_1k))
         return std::string(user);
     else
         return std::string("");
 }
 
-std::string pwl::getHostName()
+std::string
+pwl::get_host_name()
 {
-    char hostName[pwl::kBufferSize1k];
+    char host_name[pwl::k_buffer_size_1k];
 
-    if (0 == gethostname(hostName, pwl::kBufferSize1k))
-        return std::string(hostName);
+    if (0 == gethostname(host_name, pwl::k_buffer_size_1k))
+        return std::string(host_name);
     else
         return std::string("");
 }
 
-int pwl::getProcessId() { return getpid(); }
+int
+pwl::get_process_id()
+{
+    return getpid();
+}
 
-std::string pwl::getOSVersion()
+std::string
+pwl::get_os_version()
 {
     struct utsname buf;
 
@@ -69,16 +78,16 @@ std::string pwl::getOSVersion()
     }
     else
     {
-        return fmt::sprintf("%s %s %s %s %s", buf.sysname, buf.nodename,
-                            buf.release, buf.version, buf.machine);
+        return fmt::sprintf("%s %s %s %s %s", buf.sysname, buf.nodename, buf.release, buf.version, buf.machine);
     }
 }
 
-std::string pwl::getCPUInfo()
+std::string
+pwl::get_cpu_info()
 {
-    const std::string kCPUINFOFileName = std::string("/proc/cpuinfo");
+    const std::string k_cpu_info_filename = std::string("/proc/cpuinfo");
 
-    std::ifstream file(kCPUINFOFileName);
+    std::ifstream file(k_cpu_info_filename);
 
     if (false == file.is_open())
     {
@@ -89,8 +98,8 @@ std::string pwl::getCPUInfo()
     std::string delims = std::string(" \t\r\n");
     std::vector<std::string> tokens;
 
-    std::string modelName = std::string("");
-    std::string cpuCores = std::string("");
+    std::string model_name = std::string("");
+    std::string cpuCores   = std::string("");
 
     while (std::getline(file, line))
     {
@@ -105,12 +114,12 @@ std::string pwl::getCPUInfo()
         {
             if (std::string("name") == tokens[1])
             {
-                modelName = tokens[3];
+                model_name = tokens[3];
 
                 for (auto i = 4; i < tokens.size(); ++i)
                 {
-                    modelName += std::string(" ");
-                    modelName += tokens[i];
+                    model_name += std::string(" ");
+                    model_name += tokens[i];
                 }
             }
         }
@@ -125,13 +134,13 @@ std::string pwl::getCPUInfo()
 
     file.close();
 
-    auto str = fmt::sprintf("%s, %s cores", modelName, cpuCores);
+    auto str = fmt::sprintf("%s, %s cores", model_name, cpuCores);
 
     return str;
 }
 
-void pwl::changeStr(std::string &str, const std::string &from,
-                    const std::string &to)
+void
+pwl::change_str(std::string& str, const std::string& from, const std::string& to)
 {
     if (true == from.empty())
     {
@@ -146,89 +155,94 @@ void pwl::changeStr(std::string &str, const std::string &from,
     }
 }
 
-void pwl::tokenize(std::string_view str, std::vector<std::string> &tokens,
-                   std::string_view delims)
+void
+pwl::tokenize(std::string_view str, std::vector<std::string>& tokens, std::string_view delims)
 {
     tokens.clear();
 
-    std::string::size_type lastPos = str.find_first_not_of(delims, 0);
-    std::string::size_type pos = str.find_first_of(delims, lastPos);
+    std::string::size_type last_pos = str.find_first_not_of(delims, 0);
+    std::string::size_type pos      = str.find_first_of(delims, last_pos);
 
-    while (std::string::npos != pos || std::string::npos != lastPos)
+    while (std::string::npos != pos || std::string::npos != last_pos)
     {
-        tokens.emplace_back(str.substr(lastPos, pos - lastPos));
+        tokens.emplace_back(str.substr(last_pos, pos - last_pos));
 
-        lastPos = str.find_first_not_of(delims, pos);
-        pos = str.find_first_of(delims, lastPos);
+        last_pos = str.find_first_not_of(delims, pos);
+        pos      = str.find_first_of(delims, last_pos);
     }
 }
 
-void pwl::setCasesensitive(std::string &str, const bool casesensitive)
+void
+pwl::set_casesensitive(std::string& str, const bool casesensitive)
 {
     if (false == casesensitive)
-        pwl::toLowerStr(str);
+        pwl::to_lower_str(str);
 }
 
-void pwl::toUpperStr(std::string &str)
+void
+pwl::to_upper_str(std::string& str)
 {
-    std::transform(str.begin(), str.end(), str.begin(),
-                   [](unsigned char c) { return std::toupper(c); });
+    std::transform(str.begin(), str.end(), str.begin(), [](unsigned char c) { return std::toupper(c); });
 }
 
-void pwl::toLowerStr(std::string &str)
+void
+pwl::to_lower_str(std::string& str)
 {
-    std::transform(str.begin(), str.end(), str.begin(),
-                   [](unsigned char c) { return std::tolower(c); });
+    std::transform(str.begin(), str.end(), str.begin(), [](unsigned char c) { return std::tolower(c); });
 }
 
-bool pwl::isEqual(const std::string &str1, const std::string &str2,
-                  const bool casesensitive)
+bool
+pwl::is_equal(const std::string& str1, const std::string& str2, const bool casesensitive)
 {
     if (true == casesensitive)
-        return pwl::isEqualCasesensitive(str1, str2);
+        return pwl::is_equal_casesensitive(str1, str2);
     else
-        return pwl::isEqualIncasesensitive(str1, str2);
+        return pwl::is_equal_incasesensitive(str1, str2);
 }
 
-bool pwl::isEqualCasesensitive(const std::string &str1, const std::string &str2)
+bool
+pwl::is_equal_casesensitive(const std::string& str1, const std::string& str2)
 {
     return str1 == str2;
 }
 
-bool pwl::isEqualIncasesensitive(const std::string &str1,
-                                 const std::string &str2)
+bool
+pwl::is_equal_incasesensitive(const std::string& str1, const std::string& str2)
 {
-    return std::equal(str1.begin(), str1.end(), str2.begin(), str2.end(),
-                      [](unsigned char a, unsigned char b)
-                      { return std::tolower(a) == std::tolower(b); });
+    return std::equal(str1.begin(),
+                      str1.end(),
+                      str2.begin(),
+                      str2.end(),
+                      [](unsigned char a, unsigned char b) { return std::tolower(a) == std::tolower(b); });
 }
 
-bool pwl::isEqual(const unsigned char str1, const unsigned char str2,
-                  const bool casesensitive)
+bool
+pwl::is_equal(const unsigned char str1, const unsigned char str2, const bool casesensitive)
 {
     if (true == casesensitive)
-        return pwl::isEqual(str1, str2);
+        return pwl::is_equal(str1, str2);
     else
-        return pwl::isEqualIncasesensitive(str1, str2);
+        return pwl::is_equal_incasesensitive(str1, str2);
 }
 
-bool pwl::isEqualCasesensitive(const unsigned char str1,
-                               const unsigned char str2)
+bool
+pwl::is_equal_casesensitive(const unsigned char str1, const unsigned char str2)
 {
     return str1 == str2;
 }
 
-bool pwl::isEqualIncasesensitive(const unsigned char str1,
-                                 const unsigned char str2)
+bool
+pwl::is_equal_incasesensitive(const unsigned char str1, const unsigned char str2)
 {
     return tolower(str1) == tolower(str2);
 }
 
-bool pwl::isEqual(const float f1, const float f2, const float max_rel_diff)
+bool
+pwl::is_equal(const float f1, const float f2, const float max_rel_diff)
 {
-    float diff = fabsf(f1 - f2);
-    float ff1 = fabsf(f1);
-    float ff2 = fabsf(f2);
+    float diff    = fabsf(f1 - f2);
+    float ff1     = fabsf(f1);
+    float ff2     = fabsf(f2);
 
     float largest = (ff2 > ff1) ? ff2 : ff1;
 
@@ -242,11 +256,12 @@ bool pwl::isEqual(const float f1, const float f2, const float max_rel_diff)
     }
 }
 
-bool pwl::isEqual(const double d1, const double d2, const double max_rel_diff)
+bool
+pwl::is_equal(const double d1, const double d2, const double max_rel_diff)
 {
-    double diff = fabs(d1 - d2);
-    double fd1 = fabs(d1);
-    double fd2 = fabs(d2);
+    double diff    = fabs(d1 - d2);
+    double fd1     = fabs(d1);
+    double fd2     = fabs(d2);
 
     double largest = (fd2 > fd1) ? fd2 : fd1;
 
@@ -260,12 +275,14 @@ bool pwl::isEqual(const double d1, const double d2, const double max_rel_diff)
     }
 }
 
-std::string pwl::makeLine(const std::vector<std::string> &tokens,
-                          const std::size_t fromPos, const std::size_t toPos,
-                          const std::string &delims)
+std::string
+pwl::make_line(const std::vector<std::string>& tokens,
+               const std::size_t from_pos,
+               const std::size_t to_pos,
+               const std::string& delims)
 {
     auto line = std::string("");
-    for (auto pos = fromPos; pos < toPos; ++pos)
+    for (auto pos = from_pos; pos < to_pos; ++pos)
     {
         line += delims;
         line += tokens[pos];
@@ -275,4 +292,8 @@ std::string pwl::makeLine(const std::vector<std::string> &tokens,
 }
 
 // TODO
-double pwl::atof2(const std::string &str) { return std::atof(str.c_str()); }
+double
+pwl::atof2(const std::string& str)
+{
+    return std::atof(str.c_str());
+}
