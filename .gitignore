@@ -9,8 +9,10 @@ build/src/
 build/.ninja*
 build/build.*
 build/cmake*
+build/CMake*
 build/compile_*
 build/install_*
+ubild/compile_*.json
 doc/html/
 doc/latex/
 install/

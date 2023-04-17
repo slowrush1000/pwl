@@ -1,6 +1,7 @@
 {
     "editor.formatOnSave": true,
     "editor.formatOnType": true,
-    "astyle.astylerc": '/home/yh1000/.astylerc',
-    "C_Cpp.formatting": "disabled"
+    "cmake.configureOnOpen": false,
+    //"astyle.astylerc": '/home/yh1000/.astylerc',
+    //"C_Cpp.formatting": "disabled"
 }

@@ -1,12 +1,12 @@
 /**
  * @file pwl_git.hpp.in
  * @author Cheon Younghoe (you@domain.com)
- * @brief 
+ * @brief
  * @version 0.1
  * @date 2023-04-02
- * 
+ *
  * @copyright Copyright (c) 2023
- * 
+ *
  */
 
 #ifndef PWL_GIT_H
@@ -16,18 +16,18 @@
 
 namespace pwl
 {
-    const std::string   kGitBranch          = "@GIT_BRANCH@";
-    const std::string   kGitCommitHash      = "@GIT_COMMIT_HASH@";
+    const std::string kGitBranch = "@GIT_BRANCH@";
+    const std::string kGitCommitHash = "@GIT_COMMIT_HASH@";
 
-	class Git
-	{
-		public:
-			Git() = default;
-			virtual ~Git();
+    class Git
+    {
+      public:
+        Git() = default;
+        virtual ~Git();
 
-    		static std::string  getGitBranch();
-            static std::string  getGitCommitHash();
-	};
-}
+        static std::string getGitBranch();
+        static std::string getGitCommitHash();
+    };
+} // namespace pwl
 
 #endif // PWL_GIT_H

@@ -11,17 +11,15 @@
 
 #include "pwl_main.hpp"
 #include "pwl_version.hpp"
+#include "gtest/gtest.h"
 #include <iostream>
 #include <string>
-#include "gtest/gtest.h"
 
-pwl::Version    kVersion(std::string("pwl.test.exe"), 20230402, 0, 0);
+pwl::Version kVersion(std::string("pwl.test.exe"), 20230402, 0, 0);
 
-int
-main(int argc, char* argv[])
-{
-    std::cout << kVersion.getStr() << "\n";
+int main(int argc, char *argv[]) {
+  std::cout << kVersion.getStr() << "\n";
 
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+  ::testing::InitGoogleTest(&argc, argv);
+  return RUN_ALL_TESTS();
 }

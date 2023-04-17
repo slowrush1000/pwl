@@ -1,0 +1,12 @@
+BasedOnStyle: LLVM
+IndentWidth: 4
+BreakBeforeBraces: Allman
+IndentCaseLabels: true
+UseTab: Never
+Standard: c++20
+SeparateDefinitionBlocks: Always
+NamespaceIndentation: All
+LambdaBodyIndentation: Signature
+IndentCaseLabels: true
+Cpp11BracedListStyle: true
+AlignAfterOpenBracket: Align
